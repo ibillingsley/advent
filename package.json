@@ -1,0 +1,13 @@
+{
+	"name": "advent",
+	"version": "1.0.0",
+	"author": "Isaiah Billingsley",
+	"description": "Advent of Code solutions",
+	"homepage": "https://adventofcode.com/",
+	"license": "0BSD",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/node": "^14.14.10"
+	}
+}

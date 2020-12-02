@@ -1,0 +1,11 @@
+[package]
+name = "advent"
+version = "1.0.0"
+authors = ["Isaiah Billingsley"]
+description = "Advent of Code solutions"
+homepage = "https://adventofcode.com/"
+license = "0BSD"
+publish = false
+[[bin]]
+name = "2020-01"
+path = "2020/01/main.rs"
