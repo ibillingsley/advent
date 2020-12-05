@@ -98,9 +98,10 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
 
-    var passports = try parseInput(&gpa.allocator);
-    defer gpa.allocator.free(passports);
-    defer for (passports) |*passport| passport.deinit();
+    var arena = std.heap.ArenaAllocator.init(&gpa.allocator);
+    defer arena.deinit();
+
+    var passports = try parseInput(&arena.allocator);
 
     var answer1: i32 = 0;
     var answer2: i32 = 0;
