@@ -11,10 +11,14 @@ fn binSearch(path: []const u8, n: u32) u32 {
     var high: u32 = n;
     for (path) |c| {
         const mid = (low + high) / 2;
-        if (c == 'B' or c == 'R') {
-            low = mid;
-        } else if (c == 'F' or c == 'L') {
-            high = mid;
+        switch (c) {
+            'B', 'R' => {
+                low = mid;
+            },
+            'F', 'L' => {
+                high = mid;
+            },
+            else => unreachable,
         }
     }
     return low;
