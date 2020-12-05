@@ -23,9 +23,10 @@ fn parseInput(allocator: *std.mem.Allocator) ![]Passport {
     return passports.toOwnedSlice();
 }
 
+const required_fields = [_][]const u8{ "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
+
 fn hasRequiredFields(passport: Passport) bool {
-    const fields = [_][]const u8{ "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
-    for (fields) |field| {
+    for (required_fields) |field| {
         if (!passport.contains(field)) return false;
     }
     return true;
@@ -36,60 +37,61 @@ fn inRange(value: []const u8, min: i32, max: i32) bool {
     return int_value >= min and int_value <= max;
 }
 
-fn validate_byr(value: []const u8) bool {
-    return inRange(value, 1920, 2002);
-}
-
-fn validate_iyr(value: []const u8) bool {
-    return inRange(value, 2010, 2020);
-}
-
-fn validate_eyr(value: []const u8) bool {
-    return inRange(value, 2020, 2030);
-}
-
-fn validate_hgt(value: []const u8) bool {
-    if (std.mem.endsWith(u8, value, "cm")) {
-        return inRange(value[0 .. value.len - 2], 150, 193);
+const validators = struct {
+    fn byr(value: []const u8) bool {
+        return inRange(value, 1920, 2002);
     }
-    if (std.mem.endsWith(u8, value, "in")) {
-        return inRange(value[0 .. value.len - 2], 59, 76);
-    }
-    return false;
-}
 
-fn validate_hcl(value: []const u8) bool {
-    if ((value[0] == '#') and (value.len == 7)) {
-        _ = std.fmt.parseInt(u32, value[1..], 16) catch return false;
-        return true;
+    fn iyr(value: []const u8) bool {
+        return inRange(value, 2010, 2020);
     }
-    return false;
-}
 
-fn validate_ecl(value: []const u8) bool {
-    const colors = [_][]const u8{ "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
-    for (colors) |color| {
-        if (std.mem.eql(u8, color, value)) return true;
+    fn eyr(value: []const u8) bool {
+        return inRange(value, 2020, 2030);
     }
-    return false;
-}
 
-fn validate_pid(value: []const u8) bool {
-    if (value.len == 9) {
-        _ = std.fmt.parseInt(u32, value, 10) catch return false;
-        return true;
+    fn hgt(value: []const u8) bool {
+        if (std.mem.endsWith(u8, value, "cm")) {
+            return inRange(value[0 .. value.len - 2], 150, 193);
+        }
+        if (std.mem.endsWith(u8, value, "in")) {
+            return inRange(value[0 .. value.len - 2], 59, 76);
+        }
+        return false;
     }
-    return false;
-}
+
+    fn hcl(value: []const u8) bool {
+        if ((value[0] == '#') and (value.len == 7)) {
+            _ = std.fmt.parseInt(u32, value[1..], 16) catch return false;
+            return true;
+        }
+        return false;
+    }
+
+    fn ecl(value: []const u8) bool {
+        const colors = [_][]const u8{ "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
+        for (colors) |color| {
+            if (std.mem.eql(u8, color, value)) return true;
+        }
+        return false;
+    }
+
+    fn pid(value: []const u8) bool {
+        if (value.len == 9) {
+            _ = std.fmt.parseInt(u32, value, 10) catch return false;
+            return true;
+        }
+        return false;
+    }
+};
 
 fn validate(passport: Passport) bool {
-    return validate_byr(passport.get("byr").?) and
-        validate_iyr(passport.get("iyr").?) and
-        validate_eyr(passport.get("eyr").?) and
-        validate_hgt(passport.get("hgt").?) and
-        validate_hcl(passport.get("hcl").?) and
-        validate_ecl(passport.get("ecl").?) and
-        validate_pid(passport.get("pid").?);
+    inline for (required_fields) |field| {
+        const value = passport.get(field) orelse return false;
+        const valid = @field(validators, field)(value);
+        if (!valid) return false;
+    }
+    return true;
 }
 
 pub fn main() !void {
@@ -103,10 +105,8 @@ pub fn main() !void {
     var answer1: i32 = 0;
     var answer2: i32 = 0;
     for (passports) |passport| {
-        if (hasRequiredFields(passport)) {
-            answer1 += 1;
-            if (validate(passport)) answer2 += 1;
-        }
+        if (hasRequiredFields(passport)) answer1 += 1;
+        if (validate(passport)) answer2 += 1;
     }
     warn("part 1: {}\n", .{answer1});
     warn("part 2: {}\n", .{answer2});
