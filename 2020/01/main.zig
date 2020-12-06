@@ -1,5 +1,5 @@
 const std = @import("std");
-const warn = std.debug.warn;
+const print = std.debug.print;
 
 const input_file = @embedFile("input.txt");
 const target_sum = 2020;
@@ -56,6 +56,6 @@ pub fn main() !void {
     const input = try parseInput(&gpa.allocator);
     defer gpa.allocator.free(input);
 
-    warn("part 1: {}\n", .{part1(input)});
-    warn("part 2: {}\n", .{part2(input)});
+    print("part 1: {}\n", .{part1(input)});
+    print("part 2: {}\n", .{part2(input)});
 }

@@ -1,5 +1,5 @@
 const std = @import("std");
-const warn = std.debug.warn;
+const print = std.debug.print;
 
 const input_file = @embedFile("input.txt");
 const Passport = std.StringHashMap([]const u8);
@@ -109,6 +109,6 @@ pub fn main() !void {
         if (hasRequiredFields(passport)) answer1 += 1;
         if (validate(passport)) answer2 += 1;
     }
-    warn("part 1: {}\n", .{answer1});
-    warn("part 2: {}\n", .{answer2});
+    print("part 1: {}\n", .{answer1});
+    print("part 2: {}\n", .{answer2});
 }

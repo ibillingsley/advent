@@ -1,5 +1,5 @@
 const std = @import("std");
-const warn = std.debug.warn;
+const print = std.debug.print;
 
 const input = @embedFile("input.txt");
 
@@ -30,6 +30,6 @@ pub fn main() !void {
         if (validate1(x, y, char, password)) answer1 += 1;
         if (validate2(x, y, char, password)) answer2 += 1;
     }
-    warn("part 1: {}\n", .{answer1});
-    warn("part 2: {}\n", .{answer2});
+    print("part 1: {}\n", .{answer1});
+    print("part 2: {}\n", .{answer2});
 }

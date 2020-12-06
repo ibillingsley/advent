@@ -1,5 +1,5 @@
 const std = @import("std");
-const warn = std.debug.warn;
+const print = std.debug.print;
 
 const input = @embedFile("input.txt");
 const width = std.mem.indexOfScalar(u8, input, '\n').?;
@@ -40,6 +40,6 @@ fn part2() i32 {
 }
 
 pub fn main() !void {
-    warn("part 1: {}\n", .{part1()});
-    warn("part 2: {}\n", .{part2()});
+    print("part 1: {}\n", .{part1()});
+    print("part 2: {}\n", .{part2()});
 }
