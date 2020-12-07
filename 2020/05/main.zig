@@ -25,16 +25,16 @@ fn binSearch(path: []const u8, n: u32) u32 {
 }
 
 fn part1() u32 {
-    var maxSeatId: u32 = 0;
+    var max_seat_id: u32 = 0;
     var lines = std.mem.tokenize(input, "\n");
     while (lines.next()) |line| {
         const row = binSearch(line[0..7], rows);
         const col = binSearch(line[7..], columns);
-        const seatId = row * columns + col;
-        seats[seatId] = true;
-        maxSeatId = std.math.max(maxSeatId, seatId);
+        const seat_id = row * columns + col;
+        seats[seat_id] = true;
+        max_seat_id = std.math.max(max_seat_id, seat_id);
     }
-    return maxSeatId;
+    return max_seat_id;
 }
 
 fn part2() ?u32 {

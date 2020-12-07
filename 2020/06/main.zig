@@ -8,18 +8,18 @@ pub fn main() !void {
     var answer2: u32 = 0;
     var groups = std.mem.split(input, "\n\n");
     while (groups.next()) |group| {
-        var yesAnswers = [_]u32{0} ** 26;
-        var groupLen: u32 = 0;
+        var yes_answers = [_]u32{0} ** 26;
+        var group_len: u32 = 0;
         var people = std.mem.tokenize(group, "\n");
         while (people.next()) |person| {
             for (person) |c| {
-                yesAnswers[c - 'a'] += 1;
+                yes_answers[c - 'a'] += 1;
             }
-            groupLen += 1;
+            group_len += 1;
         }
-        for (yesAnswers) |count| {
+        for (yes_answers) |count| {
             if (count > 0) answer1 += 1;
-            if (count == groupLen) answer2 += 1;
+            if (count == group_len) answer2 += 1;
         }
     }
     print("part 1: {}\n", .{answer1});
